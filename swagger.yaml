@@ -1,0 +1,241 @@
+openapi: 3.0.0
+info:
+  title: Airbnb API - 4458
+  description: API documentation for Airbnb application.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+paths:
+  /listings:
+    post:
+      summary: Insert a listing
+      description: Add a new listing with the required parameters.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                noOfPeople:
+                  type: integer
+                  example: 4
+                country:
+                  type: string
+                  example: "USA"
+                city:
+                  type: string
+                  example: "New York"
+                price:
+                  type: number
+                  example: 150.50
+      responses:
+        '201':
+          description: Listing successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Listing created
+        '500':
+          description: Server error
+    get:
+      summary: Query listings
+      description: Retrieve listings based on parameters.
+      parameters:
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Date to query available listings.
+        - name: from
+          in: query
+          schema:
+            type: string
+          description: From location.
+        - name: to
+          in: query
+          schema:
+            type: string
+          description: To location.
+        - name: noOfPeople
+          in: query
+          schema:
+            type: integer
+          description: Number of people for the listing.
+        - name: country
+          in: query
+          schema:
+            type: string
+          description: Country to query listings.
+        - name: city
+          in: query
+          schema:
+            type: string
+          description: City to query listings.
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page number for pagination.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of results per page.
+      responses:
+        '200':
+          description: Listings retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  listings:
+                    type: array
+                    items:
+                      type: object
+        '500':
+          description: Server error
+
+  /stays:
+    post:
+      summary: Book a stay
+      description: Book a stay without payment transaction.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                  example: "2024-01-01"
+                from:
+                  type: string
+                  example: "New York"
+                to:
+                  type: string
+                  example: "Los Angeles"
+                names:
+                  type: string
+                  example: "John, Jane"
+      responses:
+        '201':
+          description: Stay successfully booked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Stay booked
+        '500':
+          description: Server error
+
+  /reviews:
+    post:
+      summary: Review a stay
+      description: Submit a review for a stay. Only those who booked a stay can review.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stayId:
+                  type: integer
+                  example: 101
+                rating:
+                  type: integer
+                  example: 5
+                comment:
+                  type: string
+                  example: "Great stay!"
+      responses:
+        '201':
+          description: Review successfully submitted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Review submitted
+        '500':
+          description: Server error
+
+  /admin/report:
+    get:
+      summary: Report listings with ratings
+      description: Filter listings by rating.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: country
+          in: query
+          schema:
+            type: string
+          description: Country to filter listings.
+        - name: city
+          in: query
+          schema:
+            type: string
+          description: City to filter listings.
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page number for pagination.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of results per page.
+      responses:
+        '200':
+          description: Listings retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  listings:
+                    type: array
+                    items:
+                      type: object
+        '500':
+          description: Server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
