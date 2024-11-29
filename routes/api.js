@@ -5,7 +5,7 @@ const authenticate = require('../middleware/auth');
 const router = express.Router();
 
 
-//listing api adresleri 
+//Listing API: Create a new listing
 router.post('/listings', authenticate, async (req, res) => {
   const { host_id, title, description, country, city, price, max_people } = req.body;
   try {
@@ -28,23 +28,37 @@ router.post('/listings', authenticate, async (req, res) => {
   }
 });
 
+
+//Listing API: Query available listings with pagination 
+//tried to add date filtering 
+//also made sure there is only one booking on that day
 router.get('/listings', async (req, res) => {
-  const { country, city, page, limit } = req.query;
+  const { country, city, page = 1, limit = 10, dateFrom, dateTo, noOfPeople } = req.query;
   const offset = (page - 1) * limit;
 
   try {
     const pool = await poolPromise;
     const result = await pool.request()
-      .input('country', sql.VarChar, country)
-      .input('city', sql.VarChar, city)
+      .input('country', sql.VarChar, country || null)
+      .input('city', sql.VarChar, city || null)
+      .input('dateFrom', sql.Date, dateFrom || null)
+      .input('dateTo', sql.Date, dateTo || null)
+      .input('noOfPeople', sql.Int, noOfPeople || null)
       .input('limit', sql.Int, limit)
       .input('offset', sql.Int, offset)
       .query(`
-        SELECT * FROM listings
-        WHERE
-          (country = @country OR @country IS NULL) AND
-          (city = @city OR @city IS NULL)
-        ORDER BY id
+        SELECT * 
+        FROM listings l
+        WHERE l.max_people >= ISNULL(@noOfPeople, l.max_people)
+          AND (l.country = @country OR @country IS NULL)
+          AND (l.city = @city OR @city IS NULL)
+          AND NOT EXISTS (
+            SELECT 1 
+            FROM stays s
+            WHERE s.listing_id = l.id 
+              AND (@dateFrom <= s.end_date AND @dateTo >= s.start_date)
+          )
+        ORDER BY l.id
         OFFSET @offset ROWS
         FETCH NEXT @limit ROWS ONLY
       `);
@@ -55,7 +69,7 @@ router.get('/listings', async (req, res) => {
 });
 
 
-//stay api adresi
+// Stay API: Book a stay
 router.post('/stays', authenticate, async (req, res) => {
   const { listing_id, guest_id, start_date, end_date, guest_names } = req.body;
   try {
@@ -77,15 +91,30 @@ router.post('/stays', authenticate, async (req, res) => {
 });
 
 
-//review api adresi
+// Review API: Add a review for a stay
 router.post('/reviews', authenticate, async (req, res) => {
   const { stay_id, rating, comment } = req.body;
   try {
     const pool = await poolPromise;
+
+    // Validate that the user booked the stay
+    const stayResult = await pool.request()
+      .input('stayId', sql.Int, stay_id)
+      .input('userId', sql.Int, req.user.id)
+      .query(`
+        SELECT 1 FROM stays 
+        WHERE id = @stayId AND guest_id = @userId
+      `);
+
+    if (stayResult.recordset.length === 0) {
+      return res.status(403).send({ status: 'error', message: 'You can only review your own stays' });
+    }
+
+    // Insert the review
     await pool.request()
       .input('stay_id', sql.Int, stay_id)
       .input('rating', sql.Int, rating)
-      .input('comment', sql.Text, comment)
+      .input('comment', sql.Text, comment || null)
       .query(`
         INSERT INTO reviews (stay_id, rating, comment)
         VALUES (@stay_id, @rating, @comment)
@@ -97,8 +126,7 @@ router.post('/reviews', authenticate, async (req, res) => {
 });
 
 
-
-//admin raporu api adresi
+// Admin API: Generate report with average ratings
 router.get('/admin/report', authenticate, async (req, res) => {
   const { country, city, page, limit } = req.query;
   const offset = (page - 1) * limit;
