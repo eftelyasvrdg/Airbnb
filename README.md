@@ -1,7 +1,7 @@
 # 4458 - Airbnb Project Documentation
 
 ## Overview
-In order to enable necessary features for engaging with property listings, this project focuses on developing an admin online interface and a backend system for a mobile app (Host). The project offers insightful information on backend development and system architecture by examining REST APIs, database administration, and deployment.
+In order to enable necessary features for engaging with property listings, this project focuses on developing an admin online interface and a backend system for a mobile app (Host). The project offers information on backend development and system architecture by examining REST APIs, database administration, and deployment.
 
 ---
 
@@ -18,6 +18,7 @@ In order to enable necessary features for engaging with property listings, this 
 ### **REST API Development**
 - Designed and developed REST APIs with a focus on usability and security.
 - Learned to test and document APIs effectively using Swagger.
+- I was able to use the appropriate endpoint and simplify API testing without utilizing the frontend because of swagger.
 
 ### **Database Management**
 - Gained experience creating and managing databases in Azure Data Studio.
