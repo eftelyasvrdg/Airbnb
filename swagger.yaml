@@ -59,16 +59,6 @@ paths:
             type: string
             format: date
           description: Date to query available listings.
-        - name: from
-          in: query
-          schema:
-            type: string
-          description: From location.
-        - name: to
-          in: query
-          schema:
-            type: string
-          description: To location.
         - name: noOfPeople
           in: query
           schema:
