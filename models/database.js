@@ -5,7 +5,7 @@ const config = {
   user: 'eftelyasvrdg',
   password: 'Fidansu236',
   server: 'project4458.database.windows.net',
-  database: 'Airbnb', //dön buna
+  database: 'Airbnb', 
   options: {
     encrypt: true, 
     enableArithAbort: true,
