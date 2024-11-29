@@ -26,7 +26,7 @@ In order to enable necessary features for engaging with property listings, this 
 
 ### **System Architecture**
 - Designed the system architecture to meet functional requirements.
-- Evaluated and selected technologies (Node.js, JavaScript) based on project needs.
+- Selected technologies (Node.js, JavaScript) based on project needs.
 
 ### **Cloud Deployment**
 - Learned the process of deploying backend applications to Azure.
@@ -34,14 +34,8 @@ In order to enable necessary features for engaging with property listings, this 
 
 ### **Problem-Solving**
 - Researched and fixed deployment errors independently.
-- Gained confidence in debugging and troubleshooting backend systems.
+- Gained confidence in debugging and troubleshooting APIs.
 
----
-
-## Project Documentation
-
-### **Overview**
-This project focuses on building a backend system for a mobile app (Host) and an admin web interface, enabling essential functionality for managing and interacting with property listings. The project explores REST APIs, database management, and deployment, offering valuable insights into backend development and system architecture.
 
 ---
 
@@ -63,8 +57,6 @@ This project focuses on building a backend system for a mobile app (Host) and an
 #### **2. Query Listings**
 - **Parameters:**
   - `Date` (required)
-  - `From` (required)
-  - `To` (required)
   - `No of People` (required)
   - `Country` (optional)
   - `City` (optional)
@@ -117,12 +109,14 @@ This project focuses on building a backend system for a mobile app (Host) and an
 
 ### **Database Creation Without Workbench**
 - The experience of switching to Azure Data Studio for database administration was different yet beneficial.
+- I had trouble with a few things. For instance, I had no issues with the Azure database at my home API address, but I had a connection issue at school. I've included a query below so you can observe it if there are any issues.
 
 ### **Azure Deployment**
 - Due to GitHub-related problems, deployment was one of the more difficult parts, but it provided valuable instructional moments.
+- Once more, here Although I was unable to resolve the access issues I ran across, I did have a functional Azure address, which I have included below. I felt obligated to include this here even though I will send a more thorough email about it.
 
 ---
 
 ## Conclusion
-My knowledge of database administration, cloud deployment, and REST API programming has greatly increased as a result of this project. It also helped me become more proficient in selecting the right technology and creating solutions that are scalable. Although building APIs was the main objective, the experience also gave insights on system architecture, designing backend, and debugging in practical settings.
+My knowledge of database administration, cloud deployment, and REST API programming has greatly increased as a result of this project. It also helped me become more proficient in selecting the right technology and creating solutions that are scalable. I am thankful that I attempted this assignment in third grade, despite the fact that I did not complete it flawlessly. Although building APIs was the main objective, the experience also gave insights on system architecture, designing backend, and debugging in practical settings.
 
